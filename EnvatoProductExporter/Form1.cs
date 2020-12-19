@@ -1,19 +1,14 @@
 ﻿using CsvHelper;
 using ExcelDataReader;
 using Newtonsoft.Json;
-using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EnvatoProductExporter
@@ -58,35 +53,62 @@ namespace EnvatoProductExporter
         }
 
         List<EnvatoItem> envatoItems = new List<EnvatoItem>();
-
+        public bool isStop { get; set; } = false;
+        public bool isContinue { get; set; } = false;
+        public int Count { get; set; } = 0;
         private async void BuGetInfo_Click(object sender, EventArgs e)
         {
+            BuGetInfo.Enabled = false;
+            BuExportExcel.Enabled = false;
+            BuIdUpload.Enabled = false;
+
             using (HttpClient client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Add("authorization", "Bearer qWZ0kRYnYv54P6NrT45gS6tZV8rnDFQm");
+                client
+                    .DefaultRequestHeaders
+                    .Add(
+                    "authorization",
+                    "Bearer 4na26UjXS6eKdPblbDZoHIgRDjlm78FV");
                 pBarInfo.Maximum = idListBox.Items.Count;
                 pBarInfo.Value = 0;
                 Application.DoEvents();
 
                 for (int i = 0; i < idListBox.Items.Count; i++)
                 {
-                    string url = $"https://api.envato.com/v3/market/catalog/item?id={idListBox.Items[i].ToString()}";
-                    using (HttpResponseMessage response = await client.GetAsync(url))
+                    try
                     {
-                        response.EnsureSuccessStatusCode();
-                        string responseBody = await response.Content.ReadAsStringAsync();
-                        var envatoItem = EnvatoItem.FromJson(responseBody);
-                        envatoItems.Add(envatoItem);
+                        string url = $"https://api.envato.com/v3/market/catalog/item?id={idListBox.Items[i].ToString()}";
+                        using (HttpResponseMessage response = await client.GetAsync(url))
+                        {
+                            response.EnsureSuccessStatusCode();
+                            string responseBody = await response.Content.ReadAsStringAsync();
+                            var envatoItem = EnvatoItem.FromJson(responseBody);
+                            envatoItems.Add(envatoItem);
+                            items.Items.Add($"{envatoItem.Id} - {envatoItem.Name} - {envatoItem.Description}");
+                        }
+                        pBarInfo.Value++;
+                        Application.DoEvents();
+                        if (isStop)
+                        {
+                            Count = i;
+                            break;
+                        }
                     }
-                    pBarInfo.Value++;
-                    Application.DoEvents();
+                    catch (Exception ex)
+                    {
+                        items.Items.Add($"{ex.Message}");
+                    }
                 }
+                BuGetInfo.Enabled = true;
+                BuExportExcel.Enabled = true;
+                BuIdUpload.Enabled = true;
+                isStop = false;
             }
 
-            for (int i = 0; i < envatoItems.Count; i++)
-            {
-                items.Items.Add($"{envatoItems[i].Id} - {envatoItems[i].Name} - {envatoItems[i].Description}");
-            }
+            //for (int i = 0; i < envatoItems.Count; i++)
+            //{
+            //    items.Items.Add($"{envatoItems[i].Id} - {envatoItems[i].Name} - {envatoItems[i].Description}");
+            //}
             MessageBox.Show("Bilgiler Getirildi.");
 
         }
@@ -113,6 +135,18 @@ namespace EnvatoProductExporter
                     cw.WriteRecord<EnvatoItem>(stu);
                     cw.NextRecord();
                 }
+            }
+        }
+
+        private void BuStop_Click(object sender, EventArgs e)
+        {
+            if (isStop)
+            {
+                isStop = false;
+            }
+            else
+            {
+                isStop = true;
             }
         }
     }

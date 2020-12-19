@@ -37,6 +37,7 @@ namespace EnvatoProductExporter
             this.pBarInfo = new System.Windows.Forms.ProgressBar();
             this.BuExportExcel = new System.Windows.Forms.Button();
             this.items = new System.Windows.Forms.ListBox();
+            this.BuStop = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // BuIdUpload
@@ -68,24 +69,24 @@ namespace EnvatoProductExporter
             // 
             this.BuGetInfo.Location = new System.Drawing.Point(138, 12);
             this.BuGetInfo.Name = "BuGetInfo";
-            this.BuGetInfo.Size = new System.Drawing.Size(120, 23);
+            this.BuGetInfo.Size = new System.Drawing.Size(76, 23);
             this.BuGetInfo.TabIndex = 3;
-            this.BuGetInfo.Text = "Bilgileri Getir";
+            this.BuGetInfo.Text = "Başla";
             this.BuGetInfo.UseVisualStyleBackColor = true;
             this.BuGetInfo.Click += new System.EventHandler(this.BuGetInfo_Click);
             // 
             // pBarInfo
             // 
-            this.pBarInfo.Location = new System.Drawing.Point(278, 12);
+            this.pBarInfo.Location = new System.Drawing.Point(302, 12);
             this.pBarInfo.Name = "pBarInfo";
-            this.pBarInfo.Size = new System.Drawing.Size(402, 23);
+            this.pBarInfo.Size = new System.Drawing.Size(396, 23);
             this.pBarInfo.TabIndex = 4;
             // 
             // BuExportExcel
             // 
-            this.BuExportExcel.Location = new System.Drawing.Point(686, 12);
+            this.BuExportExcel.Location = new System.Drawing.Point(704, 12);
             this.BuExportExcel.Name = "BuExportExcel";
-            this.BuExportExcel.Size = new System.Drawing.Size(102, 23);
+            this.BuExportExcel.Size = new System.Drawing.Size(84, 23);
             this.BuExportExcel.TabIndex = 6;
             this.BuExportExcel.Text = "Excel\'e Aktar";
             this.BuExportExcel.UseVisualStyleBackColor = true;
@@ -100,11 +101,22 @@ namespace EnvatoProductExporter
             this.items.Size = new System.Drawing.Size(650, 394);
             this.items.TabIndex = 7;
             // 
+            // BuStop
+            // 
+            this.BuStop.Location = new System.Drawing.Point(220, 12);
+            this.BuStop.Name = "BuStop";
+            this.BuStop.Size = new System.Drawing.Size(76, 23);
+            this.BuStop.TabIndex = 8;
+            this.BuStop.Text = "Bitir";
+            this.BuStop.UseVisualStyleBackColor = true;
+            this.BuStop.Click += new System.EventHandler(this.BuStop_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.BuStop);
             this.Controls.Add(this.items);
             this.Controls.Add(this.BuExportExcel);
             this.Controls.Add(this.pBarInfo);
@@ -128,6 +140,7 @@ namespace EnvatoProductExporter
         private System.Windows.Forms.ProgressBar pBarInfo;
         private System.Windows.Forms.Button BuExportExcel;
         private System.Windows.Forms.ListBox items;
+        private System.Windows.Forms.Button BuStop;
     }
 }
 
