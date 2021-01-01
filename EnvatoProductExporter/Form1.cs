@@ -1,4 +1,5 @@
-﻿using CsvHelper;
+﻿using ChoETL;
+using CsvHelper;
 using ExcelDataReader;
 using Newtonsoft.Json;
 using System;
@@ -115,8 +116,12 @@ namespace EnvatoProductExporter
 
         private void BuExportExcel_Click(object sender, EventArgs e)
         {
-            WriteCSVFile($"Sonuc{DateTime.Now.ToShortDateString()}.csv", envatoItems);
-            WriteJsonFile($"Sonuc{DateTime.Now.ToShortDateString()}.json", envatoItems);
+            var jsonModel = File.ReadAllText($"Sonuc28.12.2020.json");
+            envatoItems = JsonConvert.DeserializeObject<List<EnvatoItem>>(jsonModel);
+
+
+          //  WriteCSVFile($"Sonuc{DateTime.Now.ToShortDateString()}.csv", envatoItems);
+            //WriteJsonFile($"Sonuc{DateTime.Now.ToShortDateString()}.json", envatoItems);
             MessageBox.Show("Çıktı Alındı.");
         }
         public void WriteJsonFile(string path, List<EnvatoItem> student)
@@ -125,16 +130,9 @@ namespace EnvatoProductExporter
         }
         public void WriteCSVFile(string path, List<EnvatoItem> student)
         {
-            using (StreamWriter sw = new StreamWriter(path, false, new UTF8Encoding(true)))
-            using (CsvWriter cw = new CsvWriter(sw, CultureInfo.InvariantCulture))
+            using (var parser = new ChoCSVWriter<EnvatoItem>(path))
             {
-                cw.WriteHeader<EnvatoItem>();
-                cw.NextRecord();
-                foreach (EnvatoItem stu in student)
-                {
-                    cw.WriteRecord<EnvatoItem>(stu);
-                    cw.NextRecord();
-                }
+                parser.Write(student);
             }
         }
 
