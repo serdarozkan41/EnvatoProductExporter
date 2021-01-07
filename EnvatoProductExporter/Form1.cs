@@ -5,10 +5,13 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
@@ -116,18 +119,191 @@ namespace EnvatoProductExporter
 
         private void BuExportExcel_Click(object sender, EventArgs e)
         {
-            var jsonModel = File.ReadAllText($"Sonuc28.12.2020.json");
-            envatoItems = JsonConvert.DeserializeObject<List<EnvatoItem>>(jsonModel);
+            Dictionary<string, string?> Ogrenci = new Dictionary<string, string?>();
+            DataTable dt = new DataTable();
+            dt.Clear();
+
+            //EnvatoItem modelimin standart özelliklerini içeri aktarmak için
 
 
-          //  WriteCSVFile($"Sonuc{DateTime.Now.ToShortDateString()}.csv", envatoItems);
-            //WriteJsonFile($"Sonuc{DateTime.Now.ToShortDateString()}.json", envatoItems);
+            foreach (var item in envatoItems)
+            {
+                DataRow dr = dt.NewRow();
+
+                var envateItemProperties = GetProperties(item);
+                for (int i = 0; i < envateItemProperties.Count; i++)
+                {
+                    if (!dt.Columns.Contains(envateItemProperties[i].Key))
+                    {
+                        dt.Columns.Add(envateItemProperties[i].Key);
+                    }
+
+                    var column = dt.Columns[envateItemProperties[i].Key];
+                    dr[column] = envateItemProperties[i].Value;
+                }
+
+                foreach (var attr in item.Attributes)
+                {
+                    var att2 = "Attribute" + attr.Name.Replace("-", string.Empty);
+
+                    if (!dt.Columns.Contains(att2))
+                    {
+                        dt.Columns.Add(att2);
+                    }
+
+                    var column = dt.Columns[att2];
+                    string val = "";
+
+                    if (attr.Value?.String != null)
+                    {
+                        val = attr.Value?.String;
+                    }
+                    else if (attr.Value?.StringArray != null)
+                    {
+                        val = string.Join(",", attr.Value?.StringArray);
+                    }
+                    else
+                    {
+                        val = string.Empty;
+                    }
+
+                    dr[column] = val;
+                }
+
+                if (item.WordpressThemeMetadata != null)
+                {
+                    foreach (var wmeta in GetProperties(item.WordpressThemeMetadata))
+                    {
+                        if (!dt.Columns.Contains(wmeta.Key))
+                        {
+                            dt.Columns.Add(wmeta.Key);
+                        }
+
+                        var column = dt.Columns[wmeta.Key];
+                        dr[column] = wmeta.Value;
+                    }
+                }
+
+                if (item.Previews != null)
+                {
+                    //foreach (var wmeta in GetProperties(item.Previews))
+                    //{
+                    //    if (!dt.Columns.Contains(wmeta.Key))
+                    //    {
+                    //        dt.Columns.Add(wmeta.Key);
+                    //    }
+
+                    //    var column = dt.Columns[wmeta.Key];
+                    //    dr[column] = wmeta.Value;
+                    //}
+
+                    foreach (var wmeta in GetProperties(item.Previews.IconPreview))
+                    {
+                        if (!dt.Columns.Contains(wmeta.Key))
+                        {
+                            dt.Columns.Add(wmeta.Key);
+                        }
+
+                        var column = dt.Columns[wmeta.Key];
+                        dr[column] = wmeta.Value;
+                    }
+
+                    foreach (var wmeta in GetProperties(item.Previews.IconWithLandscapePreview))
+                    {
+                        if (!dt.Columns.Contains(wmeta.Key))
+                        {
+                            dt.Columns.Add(wmeta.Key);
+                        }
+
+                        var column = dt.Columns[wmeta.Key];
+                        dr[column] = wmeta.Value;
+                    }
+
+                    foreach (var wmeta in GetProperties(item.Previews.LandscapePreview))
+                    {
+                        if (!dt.Columns.Contains(wmeta.Key))
+                        {
+                            dt.Columns.Add(wmeta.Key);
+                        }
+
+                        var column = dt.Columns[wmeta.Key];
+                        dr[column] = wmeta.Value;
+                    }
+
+                    foreach (var wmeta in GetProperties(item.Previews.LiveSite))
+                    {
+                        if (!dt.Columns.Contains(wmeta.Key))
+                        {
+                            dt.Columns.Add(wmeta.Key);
+                        }
+
+                        var column = dt.Columns[wmeta.Key];
+                        dr[column] = wmeta.Value;
+                    }
+                }
+
+                dt.Rows.Add(dr);
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            var columnNames = dt.Columns.Cast<DataColumn>().Select(column => "\"" + column.ColumnName.Replace("\"", "\"\"") + "\"").ToArray();
+            sb.AppendLine(string.Join(",", columnNames));
+
+            foreach (DataRow row in dt.Rows)
+            {
+                var fields = row.ItemArray.Select(field => "\"" + field.ToString().Replace("\"", "\"\"") + "\"").ToArray();
+                sb.AppendLine(string.Join(",", fields));
+            }
+
+            File.WriteAllText($"{Guid.NewGuid()}_{DateTime.Now.ToShortDateString()}.csv", sb.ToString(), Encoding.Default);
+     
             MessageBox.Show("Çıktı Alındı.");
         }
+
+
+
+        public List<KeyValue> GetProperties(object item)
+        {
+            List<KeyValue> keyValues = new List<KeyValue>();
+            foreach (PropertyInfo p in item.GetType().GetProperties())
+            {
+                string propertyName = p.Name;
+                if (propertyName == "Type"
+                    || propertyName == "Attributes"
+                    || propertyName == "WordpressThemeMetadata"
+                    || propertyName == "Previews")
+                {
+                    continue;
+                }
+
+                string propertyValue = "";
+
+                if (propertyName == "Tags")
+                {
+                    object ls = p.GetValue(item);
+                    propertyValue = string.Join(",", (List<string>)ls);
+                }
+                else
+                {
+                    propertyValue = p.GetValue(item).ToString();
+                }
+
+                keyValues.Add(new KeyValue
+                {
+                    Key = item.GetType().Name + propertyName.Replace("-", string.Empty),
+                    Value = propertyValue
+                });
+            }
+
+            return keyValues;
+        }
+
         public void WriteJsonFile(string path, List<EnvatoItem> student)
         {
             File.WriteAllText(path, JsonConvert.SerializeObject(student));
         }
+
         public void WriteCSVFile(string path, List<EnvatoItem> student)
         {
             using (var parser = new ChoCSVWriter<EnvatoItem>(path))
@@ -147,5 +323,11 @@ namespace EnvatoProductExporter
                 isStop = true;
             }
         }
+    }
+
+    public class KeyValue
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
     }
 }
