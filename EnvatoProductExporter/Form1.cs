@@ -32,7 +32,7 @@ namespace EnvatoProductExporter
         private void ofdIds_FileOk(object sender, CancelEventArgs e)
         {
             string selectedFileName = ofdIds.FileName;
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             using (var stream = File.Open(selectedFileName, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
