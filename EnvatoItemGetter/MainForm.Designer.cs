@@ -29,6 +29,7 @@ namespace EnvatoItemGetter
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.TbToken = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.PbItem = new System.Windows.Forms.ProgressBar();
@@ -53,7 +54,6 @@ namespace EnvatoItemGetter
             this.TbToken.Name = "TbToken";
             this.TbToken.Size = new System.Drawing.Size(675, 20);
             this.TbToken.TabIndex = 0;
-            this.TbToken.Text = "4na26UjXS6eKdPblbDZoHIgRDjlm78FV";
             // 
             // label1
             // 
@@ -185,8 +185,12 @@ namespace EnvatoItemGetter
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.PbItem);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "MainForm";
-            this.Text = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "ENVATO Item Getter  ---- shaesk.com";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
