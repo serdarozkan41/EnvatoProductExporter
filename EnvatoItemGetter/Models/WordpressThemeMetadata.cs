@@ -4,16 +4,16 @@ namespace EnvatoItemGetter.Models
 {
     public class WordpressThemeMetadata
     {
-        [JsonProperty("theme_name", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("theme_name")]
         public string ThemeName { get; set; }
 
-        [JsonProperty("author_name", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("author_name")]
         public string AuthorName { get; set; }
 
-        [JsonProperty("version", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("version")]
         public string Version { get; set; }
 
-        [JsonProperty("description", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("description")]
         public string Description { get; set; }
     }
 }

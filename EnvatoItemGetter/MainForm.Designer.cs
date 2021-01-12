@@ -44,8 +44,11 @@ namespace EnvatoItemGetter
             this.BuExport = new System.Windows.Forms.Button();
             this.BuErrorListExport = new System.Windows.Forms.Button();
             this.EnvatoItemSaveDialog = new System.Windows.Forms.SaveFileDialog();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.LbError = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // TbToken
@@ -172,11 +175,26 @@ namespace EnvatoItemGetter
             this.EnvatoItemSaveDialog.FileName = "EnvatoItems";
             this.EnvatoItemSaveDialog.Filter = "CSV File|*.csv;";
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.LbError});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 448);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(800, 22);
+            this.statusStrip1.TabIndex = 10;
+            // 
+            // LbError
+            // 
+            this.LbError.Name = "LbError";
+            this.LbError.Size = new System.Drawing.Size(0, 17);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 470);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.BuErrorListExport);
             this.Controls.Add(this.BuExport);
             this.Controls.Add(this.BuStop);
@@ -194,7 +212,10 @@ namespace EnvatoItemGetter
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -214,6 +235,8 @@ namespace EnvatoItemGetter
         private System.Windows.Forms.Button BuExport;
         private System.Windows.Forms.Button BuErrorListExport;
         private System.Windows.Forms.SaveFileDialog EnvatoItemSaveDialog;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel LbError;
     }
 }
 

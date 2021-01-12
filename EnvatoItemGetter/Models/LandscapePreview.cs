@@ -5,10 +5,10 @@ namespace EnvatoItemGetter.Models
 {
     public class LandscapePreview
     {
-        [JsonProperty("landscape_url", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("landscape_url")]
         public Uri LandscapeUrl { get; set; }
 
-        [JsonProperty("type", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("type")]
         public string Type { get; set; }
     }
 }

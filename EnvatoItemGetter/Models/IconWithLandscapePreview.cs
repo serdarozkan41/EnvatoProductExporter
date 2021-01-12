@@ -5,13 +5,13 @@ namespace EnvatoItemGetter.Models
 {
     public class IconWithLandscapePreview
     {
-        [JsonProperty("icon_url", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("icon_url")]
         public Uri IconUrl { get; set; }
 
-        [JsonProperty("landscape_url", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("landscape_url")]
         public Uri LandscapeUrl { get; set; }
 
-        [JsonProperty("type", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("type")]
         public string Type { get; set; }
     }
 }

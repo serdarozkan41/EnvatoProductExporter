@@ -6,70 +6,70 @@ namespace EnvatoItemGetter.Models
 {
     public class EnvatoItem
     {
-        [JsonProperty("id", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("id")]
         public long? Id { get; set; }
 
-        [JsonProperty("name", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("number_of_sales", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("number_of_sales")]
         public long? NumberOfSales { get; set; }
 
-        [JsonProperty("author_username", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("author_username")]
         public string AuthorUsername { get; set; }
 
-        [JsonProperty("author_url", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("author_url")]
         public Uri AuthorUrl { get; set; }
 
-        [JsonProperty("url", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("url")]
         public Uri Url { get; set; }
 
-        [JsonProperty("updated_at", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("updated_at")]
         public DateTimeOffset? UpdatedAt { get; set; }
 
-        [JsonProperty("attributes", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("attributes")]
         public List<Attribute> Attributes { get; set; }
 
-        [JsonProperty("wordpress_theme_metadata", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("wordpress_theme_metadata")]
         public WordpressThemeMetadata WordpressThemeMetadata { get; set; }
 
-        [JsonProperty("description", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("description")]
         public string Description { get; set; }
 
-        [JsonProperty("site", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("site")]
         public string Site { get; set; }
 
-        [JsonProperty("classification", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("classification")]
         public string Classification { get; set; }
 
-        [JsonProperty("classification_url", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("classification_url")]
         public Uri ClassificationUrl { get; set; }
 
-        [JsonProperty("price_cents", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("price_cents")]
         public long? PriceCents { get; set; }
 
-        [JsonProperty("author_image", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-        public Uri AuthorImage { get; set; }
+        [JsonProperty("author_image")]
+        public Uri? AuthorImage { get; set; }
 
-        [JsonProperty("summary", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("summary")]
         public string Summary { get; set; }
 
-        [JsonProperty("rating", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("rating")]
         public double? Rating { get; set; }
 
-        [JsonProperty("rating_count", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("rating_count")]
         public long? RatingCount { get; set; }
 
-        [JsonProperty("published_at", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("published_at")]
         public DateTimeOffset? PublishedAt { get; set; }
 
-        [JsonProperty("trending", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("trending")]
         public bool? Trending { get; set; }
 
-        [JsonProperty("tags", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("tags")]
         public List<string> Tags { get; set; }
 
-        [JsonProperty("previews", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("previews")]
         public Previews Previews { get; set; }
     }
 }

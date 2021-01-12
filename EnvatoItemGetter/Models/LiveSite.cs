@@ -4,10 +4,10 @@ namespace EnvatoItemGetter.Models
 {
     public partial class LiveSite
     {
-        [JsonProperty("href", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("href")]
         public string Href { get; set; }
 
-        [JsonProperty("type", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("type")]
         public string Type { get; set; }
     }
 }

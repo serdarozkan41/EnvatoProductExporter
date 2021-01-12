@@ -5,10 +5,10 @@ namespace EnvatoItemGetter.Models
 {
     public class IconPreview
     {
-        [JsonProperty("icon_url", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("icon_url")]
         public Uri IconUrl { get; set; }
 
-        [JsonProperty("type", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("type")]
         public string Type { get; set; }
     }
 }

@@ -4,16 +4,16 @@ namespace EnvatoItemGetter.Models
 {
     public class Previews
     {
-        [JsonProperty("live_site", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-        public LiveSite LiveSite { get; set; }
+        [JsonProperty("live_site")]
+        public LiveSite? LiveSite { get; set; }
 
-        [JsonProperty("icon_with_landscape_preview", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-        public IconWithLandscapePreview IconWithLandscapePreview { get; set; }
+        [JsonProperty("icon_with_landscape_preview")]
+        public IconWithLandscapePreview? IconWithLandscapePreview { get; set; }
 
-        [JsonProperty("landscape_preview", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-        public LandscapePreview LandscapePreview { get; set; }
+        [JsonProperty("landscape_preview")]
+        public LandscapePreview? LandscapePreview { get; set; }
 
-        [JsonProperty("icon_preview", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-        public IconPreview IconPreview { get; set; }
+        [JsonProperty("icon_preview")]
+        public IconPreview? IconPreview { get; set; }
     }
 }

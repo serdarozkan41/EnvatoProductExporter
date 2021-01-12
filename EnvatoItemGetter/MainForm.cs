@@ -1,20 +1,23 @@
 ﻿using EnvatoItemGetter.Models;
 using ExcelDataReader;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EnvatoItemGetter
 {
     public partial class MainForm : Form
     {
-        List<string> errorIdList = new List<string>();
+        List<KeyValue> errorIdList = new List<KeyValue>();
         List<EnvatoItem> envatoItems = new List<EnvatoItem>();
         bool isStop = false;
         bool isContinue = false;
@@ -41,7 +44,7 @@ namespace EnvatoItemGetter
             savePath = EnvatoItemSaveDialog.FileName;
 
             ExportData();
-        
+
             if (isFinish)
             {
                 LbIds.Items.Clear();
@@ -55,113 +58,122 @@ namespace EnvatoItemGetter
             DataTable dt = new DataTable();
             dt.Clear();
 
+
             foreach (var item in envatoItems)
             {
-                DataRow dr = dt.NewRow();
-
-                var envateItemProperties = GetProperties(item);
-                for (int i = 0; i < envateItemProperties.Count; i++)
+                try
                 {
-                    if (!dt.Columns.Contains(envateItemProperties[i].Key))
+                    DataRow dr = dt.NewRow();
+
+                    var envateItemProperties = GetProperties(item);
+                    for (int i = 0; i < envateItemProperties.Count; i++)
                     {
-                        dt.Columns.Add(envateItemProperties[i].Key);
+                        if (!dt.Columns.Contains(envateItemProperties[i].Key))
+                        {
+                            dt.Columns.Add(envateItemProperties[i].Key);
+                        }
+
+                        var column = dt.Columns[envateItemProperties[i].Key];
+                        dr[column] = envateItemProperties[i].Value;
                     }
 
-                    var column = dt.Columns[envateItemProperties[i].Key];
-                    dr[column] = envateItemProperties[i].Value;
-                }
+                    foreach (var attr in item.Attributes)
+                    {
+                        var att2 = "Attribute" + attr.Name.Replace("-", string.Empty);
 
-                foreach (var attr in item.Attributes)
+                        if (!dt.Columns.Contains(att2))
+                        {
+                            dt.Columns.Add(att2);
+                        }
+
+                        var column = dt.Columns[att2];
+                        string val = "";
+
+                        if (attr.Value?.String != null)
+                        {
+                            val = attr.Value?.String;
+                        }
+                        else if (attr.Value?.StringArray != null)
+                        {
+                            val = string.Join(",", attr.Value?.StringArray);
+                        }
+                        else
+                        {
+                            val = string.Empty;
+                        }
+
+                        dr[column] = val;
+                    }
+
+                    if (item.WordpressThemeMetadata != null)
+                    {
+                        foreach (var wmeta in GetProperties(item.WordpressThemeMetadata))
+                        {
+                            if (!dt.Columns.Contains(wmeta.Key))
+                            {
+                                dt.Columns.Add(wmeta.Key);
+                            }
+
+                            var column = dt.Columns[wmeta.Key];
+                            dr[column] = wmeta.Value;
+                        }
+                    }
+
+                    if (item.Previews != null)
+                    {
+                        foreach (var wmeta in GetProperties(item.Previews.IconPreview))
+                        {
+                            if (!dt.Columns.Contains(wmeta.Key))
+                            {
+                                dt.Columns.Add(wmeta.Key);
+                            }
+
+                            var column = dt.Columns[wmeta.Key];
+                            dr[column] = wmeta.Value;
+                        }
+
+                        foreach (var wmeta in GetProperties(item.Previews.IconWithLandscapePreview))
+                        {
+                            if (!dt.Columns.Contains(wmeta.Key))
+                            {
+                                dt.Columns.Add(wmeta.Key);
+                            }
+
+                            var column = dt.Columns[wmeta.Key];
+                            dr[column] = wmeta.Value;
+                        }
+
+                        foreach (var wmeta in GetProperties(item.Previews.LandscapePreview))
+                        {
+                            if (!dt.Columns.Contains(wmeta.Key))
+                            {
+                                dt.Columns.Add(wmeta.Key);
+                            }
+
+                            var column = dt.Columns[wmeta.Key];
+                            dr[column] = wmeta.Value;
+                        }
+
+                        foreach (var wmeta in GetProperties(item.Previews.LiveSite))
+                        {
+                            if (!dt.Columns.Contains(wmeta.Key))
+                            {
+                                dt.Columns.Add(wmeta.Key);
+                            }
+
+                            var column = dt.Columns[wmeta.Key];
+                            dr[column] = wmeta.Value;
+                        }
+                    }
+
+                    dt.Rows.Add(dr);
+                }
+                catch (Exception ex)
                 {
-                    var att2 = "Attribute" + attr.Name.Replace("-", string.Empty);
 
-                    if (!dt.Columns.Contains(att2))
-                    {
-                        dt.Columns.Add(att2);
-                    }
-
-                    var column = dt.Columns[att2];
-                    string val = "";
-
-                    if (attr.Value?.String != null)
-                    {
-                        val = attr.Value?.String;
-                    }
-                    else if (attr.Value?.StringArray != null)
-                    {
-                        val = string.Join(",", attr.Value?.StringArray);
-                    }
-                    else
-                    {
-                        val = string.Empty;
-                    }
-
-                    dr[column] = val;
                 }
-
-                if (item.WordpressThemeMetadata != null)
-                {
-                    foreach (var wmeta in GetProperties(item.WordpressThemeMetadata))
-                    {
-                        if (!dt.Columns.Contains(wmeta.Key))
-                        {
-                            dt.Columns.Add(wmeta.Key);
-                        }
-
-                        var column = dt.Columns[wmeta.Key];
-                        dr[column] = wmeta.Value;
-                    }
-                }
-
-                if (item.Previews != null)
-                {
-                    foreach (var wmeta in GetProperties(item.Previews.IconPreview))
-                    {
-                        if (!dt.Columns.Contains(wmeta.Key))
-                        {
-                            dt.Columns.Add(wmeta.Key);
-                        }
-
-                        var column = dt.Columns[wmeta.Key];
-                        dr[column] = wmeta.Value;
-                    }
-
-                    foreach (var wmeta in GetProperties(item.Previews.IconWithLandscapePreview))
-                    {
-                        if (!dt.Columns.Contains(wmeta.Key))
-                        {
-                            dt.Columns.Add(wmeta.Key);
-                        }
-
-                        var column = dt.Columns[wmeta.Key];
-                        dr[column] = wmeta.Value;
-                    }
-
-                    foreach (var wmeta in GetProperties(item.Previews.LandscapePreview))
-                    {
-                        if (!dt.Columns.Contains(wmeta.Key))
-                        {
-                            dt.Columns.Add(wmeta.Key);
-                        }
-
-                        var column = dt.Columns[wmeta.Key];
-                        dr[column] = wmeta.Value;
-                    }
-
-                    foreach (var wmeta in GetProperties(item.Previews.LiveSite))
-                    {
-                        if (!dt.Columns.Contains(wmeta.Key))
-                        {
-                            dt.Columns.Add(wmeta.Key);
-                        }
-
-                        var column = dt.Columns[wmeta.Key];
-                        dr[column] = wmeta.Value;
-                    }
-                }
-
-                dt.Rows.Add(dr);
             }
+
 
             StringBuilder sb = new StringBuilder();
 
@@ -174,7 +186,7 @@ namespace EnvatoItemGetter
                 sb.AppendLine(string.Join(",", fields));
             }
 
-            
+
             File.WriteAllText(savePath, sb.ToString(), Encoding.Default);
 
             MessageBox.Show("Çıktı Alındı.");
@@ -217,7 +229,7 @@ namespace EnvatoItemGetter
         {
             IdListFileDialog.ShowDialog();
         }
-
+        public int tokenIndex { get; set; } = 0;
         private async void BuStart_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(TbToken.Text))
@@ -241,7 +253,8 @@ namespace EnvatoItemGetter
                     MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Add(
                   "Authorization",
-                  "Bearer " + TbToken.Text);
+                  "Bearer " + TbToken.Text.Split(';')[0]);
+                tokenIndex = 0;
 
                 PbItem.Maximum = LbIds.Items.Count;
                 PbItem.Value = 0;
@@ -289,9 +302,51 @@ namespace EnvatoItemGetter
                         PbItem.Value++;
                         Application.DoEvents();
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        errorIdList.Add(LbIds.Items[i].ToString());
+                        if (!ex.Message.Contains("404"))
+                        {
+                            if (tokenIndex == 0)
+                            {
+                                client.DefaultRequestHeaders
+                                    .Authorization = new AuthenticationHeaderValue(
+                                        "Bearer", TbToken.Text.Split(';')[1]);
+                                tokenIndex = 1;
+                            }
+                            else
+                            {
+                                client.DefaultRequestHeaders
+                                     .Authorization = new AuthenticationHeaderValue(
+                                         "Bearer", TbToken.Text.Split(';')[0]);
+                                tokenIndex = 0;
+                            }
+                            LbError.Text = "Çok fazla istek geldiği için bekleme moduna geçildi";
+                            await Task.Delay(5000);
+                            LbError.Text = "Bekleme modu sona erdi.";
+                            i--;
+                            //lastIndex = i;
+                            //isContinue = true;
+
+                            //MessageBox.Show(ex.Message);
+                            //MessageBox.Show("Muhtemelen Max. Limite ulaşıldığı için durduruldu.");
+
+                            //EnvatoItemSaveDialog.ShowDialog();
+
+                            //MessageBox.Show("modeme reset atıp başlat tuşuna basarsanız devam edecektir.");
+
+                            //BuLoadId.Enabled = true;
+                            //BuStart.Enabled = true;
+                            //BuStop.Enabled = false;
+                            //BuExport.Enabled = true;
+                            //TbToken.Enabled = true;
+                            //isStop = false;
+                            //break;
+
+                        }
+                        else
+                        {
+                            errorIdList.Add(new KeyValue { Key = LbIds.Items[i].ToString(), Value = ex.Message });
+                        }
                     }
                 }
 
@@ -329,43 +384,69 @@ namespace EnvatoItemGetter
 
         private void BuErrorListExport_Click(object sender, EventArgs e)
         {
-            File.WriteAllText("errorList.txt", string.Join(",", errorIdList));
+            File.WriteAllText("errorList.json", JsonConvert.SerializeObject(errorIdList));
             MessageBox.Show("Hata listesi uygulama dizinine çıkartıldı.");
         }
 
         public List<KeyValue> GetProperties(object item)
         {
-            List<KeyValue> keyValues = new List<KeyValue>();
-            foreach (PropertyInfo p in item.GetType().GetProperties())
+            if (item is null)
             {
-                string propertyName = p.Name;
-                if (propertyName == "Type"
-                    || propertyName == "Attributes"
-                    || propertyName == "WordpressThemeMetadata"
-                    || propertyName == "Previews")
-                {
-                    continue;
-                }
-
-                string propertyValue = "";
-
-                if (propertyName == "Tags")
-                {
-                    object ls = p.GetValue(item);
-                    propertyValue = string.Join(",", (List<string>)ls);
-                }
-                else
-                {
-                    propertyValue = p.GetValue(item).ToString();
-                }
-
-                keyValues.Add(new KeyValue
-                {
-                    Key = item.GetType().Name + propertyName.Replace("-", string.Empty),
-                    Value = propertyValue
-                });
+                return new List<KeyValue>();
             }
 
+            List<KeyValue> keyValues = new List<KeyValue>();
+
+            try
+            {
+                foreach (PropertyInfo p in item.GetType().GetProperties())
+                {
+                    string propertyName = p.Name;
+                    if (propertyName == "Type"
+                        || propertyName == "Attributes"
+                        || propertyName == "WordpressThemeMetadata"
+                        || propertyName == "Previews")
+                    {
+                        continue;
+                    }
+
+                    string propertyValue = "";
+
+                    if (propertyName == "Tags")
+                    {
+                        object ls = p.GetValue(item);
+                        propertyValue = string.Join(",", (List<string>)ls);
+                    }
+                    else
+                    {
+                        if (p is null)
+                        {
+                            propertyValue = "";
+                        }
+                        else
+                        {
+                            try
+                            {
+                                propertyValue = p.GetValue(item).ToString();
+                            }
+                            catch
+                            {
+                                propertyValue = "";
+                            }
+                        }
+                    }
+
+                    keyValues.Add(new KeyValue
+                    {
+                        Key = item.GetType().Name + propertyName.Replace("-", string.Empty),
+                        Value = propertyValue
+                    });
+                }
+            }
+            catch (Exception)
+            {
+
+            }
             return keyValues;
         }
     }
