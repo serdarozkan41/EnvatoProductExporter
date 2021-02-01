@@ -25,6 +25,13 @@ namespace EnvatoItemGetter
 
         int lastIndex = 0;
         string savePath = string.Empty;
+        
+        public string TruncateLongString(string str, int maxLength)
+        {
+            if (string.IsNullOrEmpty(str))
+                return str;
+            return str.Substring(0, Math.Min(str.Length, maxLength));
+        }
 
         public MainForm()
         {
@@ -177,7 +184,8 @@ namespace EnvatoItemGetter
 
             StringBuilder sb = new StringBuilder();
 
-            var columnNames = dt.Columns.Cast<DataColumn>().Select(column => "\"" + column.ColumnName.Replace("\"", "\"\"") + "\"").ToArray();
+            var columnNames = 
+                dt.Columns.Cast<DataColumn>().Select(column => "\"" + column.ColumnName.Replace("\"", "\"\"") + "\"").ToArray();
             sb.AppendLine(string.Join(",", columnNames));
 
             foreach (DataRow row in dt.Rows)
@@ -417,6 +425,10 @@ namespace EnvatoItemGetter
                         object ls = p.GetValue(item);
                         propertyValue = string.Join(",", (List<string>)ls);
                     }
+                    else if (propertyName == "Description")
+                    {
+                        propertyValue = TruncateLongString(p.GetValue(item).ToString(),31000);
+                    }
                     else
                     {
                         if (p is null)
@@ -449,5 +461,7 @@ namespace EnvatoItemGetter
             }
             return keyValues;
         }
+
+        
     }
 }
