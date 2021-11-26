@@ -204,6 +204,7 @@ namespace EnvatoItemGetter
             // 
             // columncheck
             // 
+            this.columncheck.CheckOnClick = true;
             this.columncheck.FormattingEnabled = true;
             this.columncheck.Location = new System.Drawing.Point(17, 17);
             this.columncheck.Name = "columncheck";

@@ -25,7 +25,7 @@ namespace EnvatoItemGetter
 
         int lastIndex = 0;
         string savePath = string.Empty;
-        
+
         public string TruncateLongString(string str, int maxLength)
         {
             if (string.IsNullOrEmpty(str))
@@ -64,14 +64,9 @@ namespace EnvatoItemGetter
             columncheck.Items.Insert(16, "EnvatoItemPublishedAt");
             columncheck.Items.Insert(17, "EnvatoItemTrending");
             columncheck.Items.Insert(18, "EnvatoItemTags");
-            columncheck.Items.Insert(19, "Attributealphachannel");
-            columncheck.Items.Insert(20, "Attributefilesize");
-            columncheck.Items.Insert(21, "Attributefixedpreviewresolution");
-            columncheck.Items.Insert(22, "Attributelengthvideo");
-            columncheck.Items.Insert(23, "Attributeloopedvideo");
-            columncheck.Items.Insert(24, "Attributeresolution");
-            columncheck.Items.Insert(25, "Attributevideoencoding");
-            columncheck.Items.Insert(26, "IconPreviewIconUrl");
+            columncheck.Items.Insert(19, "Attribute");
+            columncheck.Items.Insert(20, "WordpressThemeMetadata");
+            columncheck.Items.Insert(21, "Previews");
             //buradan ekledik.
 
         }
@@ -97,13 +92,14 @@ namespace EnvatoItemGetter
             List<string> selectedCheck = new List<string>();
 
             //secili olan listesinde seçili olanalrı ekle sadece kolon olarak
-            
+
 
             for (int i = 0; i < columncheck.CheckedItems.Count; i++)
             {
-                selectedCheck.Add(columncheck.CheckedItems[i].ToString()); 
-                
+                selectedCheck.Add(columncheck.CheckedItems[i].ToString());
+
             }
+
 
             foreach (var item in envatoItems)
             {
@@ -111,7 +107,7 @@ namespace EnvatoItemGetter
                 {
                     DataRow dr = dt.NewRow();
 
-                    
+
                     var envateItemProperties = GetProperties(item);
 
                     //keyde başlık value değeri
@@ -119,74 +115,85 @@ namespace EnvatoItemGetter
 
                     for (int i = 0; i < envateItemProperties.Count; i++)
                     {
-                        if (!dt.Columns.Contains(envateItemProperties[i].Key))
+                        if (selectedCheck.Any(s => s == envateItemProperties[i].Key))
                         {
-                            if (selectedCheck.Any(s=>s==envateItemProperties[i].Key))
+                            if (!dt.Columns.Contains(envateItemProperties[i].Key))
                             {
+
                                 dt.Columns.Add(envateItemProperties[i].Key);
+
+                                //if mi ne olursa 
                             }
-                            //if mi ne olursa 
-                        }
 
-                        var column = dt.Columns[envateItemProperties[i].Key];
-                        dr[column] = envateItemProperties[i].Value;
+                            var column = dt.Columns[envateItemProperties[i].Key];
+                            dr[column] = envateItemProperties[i].Value;
+                        }
                     }
 
-                    foreach (var attr in item.Attributes)
+                    if (selectedCheck.Any(s => s == "Attribute"))
                     {
-                        var att2 = "Attribute" + attr.Name.Replace("-", string.Empty);
-
-                        if (!dt.Columns.Contains(att2))
+                        foreach (var attr in item.Attributes)
                         {
-                            dt.Columns.Add(att2);
-                        }
+                            var att2 = "Attribute" + attr.Name.Replace("-", string.Empty);
 
-                        var column = dt.Columns[att2];
-                        string val = "";
 
-                        if (attr.Value?.String != null)
-                        {
-                            val = attr.Value?.String;
-                        }
-                        else if (attr.Value?.StringArray != null)
-                        {
-                            val = string.Join(",", attr.Value?.StringArray);
-                        }
-                        else
-                        {
-                            val = string.Empty;
-                        }
-
-                        dr[column] = val;
-                    }
-
-                    if (item.WordpressThemeMetadata != null)
-                    {
-                        foreach (var wmeta in GetProperties(item.WordpressThemeMetadata))
-                        {
-                            if (!dt.Columns.Contains(wmeta.Key))
+                            if (!dt.Columns.Contains(att2))
                             {
-                                dt.Columns.Add(wmeta.Key);
+                                dt.Columns.Add(att2);
                             }
 
-                            var column = dt.Columns[wmeta.Key];
-                            dr[column] = wmeta.Value;
+                            var column = dt.Columns[att2];
+                            string val = "";
+
+                            if (attr.Value?.String != null)
+                            {
+                                val = attr.Value?.String;
+                            }
+                            else if (attr.Value?.StringArray != null)
+                            {
+                                val = string.Join(",", attr.Value?.StringArray);
+                            }
+                            else
+                            {
+                                val = string.Empty;
+                            }
+
+                            dr[column] = val;
                         }
                     }
 
-                    if (item.Previews != null)
+                    if (selectedCheck.Any(s => s == "WordpressThemeMetadata"))
                     {
-                        foreach (var wmeta in GetProperties(item.Previews.IconPreview))
+                        if (item.WordpressThemeMetadata != null)
                         {
-                            if (!dt.Columns.Contains(wmeta.Key))
+                            foreach (var wmeta in GetProperties(item.WordpressThemeMetadata))
                             {
-                                dt.Columns.Add(wmeta.Key);
+                                if (!dt.Columns.Contains(wmeta.Key))
+                                {
+                                    dt.Columns.Add(wmeta.Key);
+                                }
+
+                                var column = dt.Columns[wmeta.Key];
+                                dr[column] = wmeta.Value;
                             }
-
-                            var column = dt.Columns[wmeta.Key];
-                            dr[column] = wmeta.Value;
                         }
+                    }
 
+                    if (selectedCheck.Any(s => s == "Previews"))
+                    {
+                        if (item.Previews != null)
+                        {
+                            foreach (var wmeta in GetProperties(item.Previews.IconPreview))
+                            {
+                                if (!dt.Columns.Contains(wmeta.Key))
+                                {
+                                    dt.Columns.Add(wmeta.Key);
+                                }
+
+                                var column = dt.Columns[wmeta.Key];
+                                dr[column] = wmeta.Value;
+                            }
+                        }
                         foreach (var wmeta in GetProperties(item.Previews.IconWithLandscapePreview))
                         {
                             if (!dt.Columns.Contains(wmeta.Key))
@@ -232,7 +239,7 @@ namespace EnvatoItemGetter
 
             StringBuilder sb = new StringBuilder();
 
-            var columnNames = 
+            var columnNames =
                 dt.Columns.Cast<DataColumn>().Select(column => "\"" + column.ColumnName.Replace("\"", "\"\"") + "\"").ToArray();
             sb.AppendLine(string.Join(",", columnNames));
 
@@ -435,7 +442,14 @@ namespace EnvatoItemGetter
 
         private void BuExport_Click(object sender, EventArgs e)
         {
-            EnvatoItemSaveDialog.ShowDialog();
+            if (columncheck.CheckedItems.Count == 0)
+            {
+                MessageBox.Show("Lütfen önce kolon seçiniz.");
+            }
+            else
+            {
+                EnvatoItemSaveDialog.ShowDialog();
+            }
         }
 
         private void BuErrorListExport_Click(object sender, EventArgs e)
@@ -475,7 +489,7 @@ namespace EnvatoItemGetter
                     }
                     else if (propertyName == "Description")
                     {
-                        propertyValue = TruncateLongString(p.GetValue(item).ToString(),31000);
+                        propertyValue = TruncateLongString(p.GetValue(item).ToString(), 31000);
                     }
                     else
                     {
