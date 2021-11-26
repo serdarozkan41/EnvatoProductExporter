@@ -44,6 +44,14 @@ namespace EnvatoItemGetter
             BuStop.Enabled = false;
             BuExport.Enabled = false;
             TbToken.Enabled = false;
+
+            columncheck.Items.Insert(0,"süm");
+            columncheck.Items.Insert(1, "süm2");
+            columncheck.Items.Insert(2, "süm3");
+            columncheck.Items.Insert(3, "süm4");
+            columncheck.Items.Insert(4, "süm5");
+
+
         }
 
         private void EnvatoItemSaveDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
@@ -462,6 +470,5 @@ namespace EnvatoItemGetter
             return keyValues;
         }
 
-        
     }
 }

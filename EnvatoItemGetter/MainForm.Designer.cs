@@ -46,9 +46,12 @@ namespace EnvatoItemGetter
             this.EnvatoItemSaveDialog = new System.Windows.Forms.SaveFileDialog();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.LbError = new System.Windows.Forms.ToolStripStatusLabel();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.columncheck = new System.Windows.Forms.CheckedListBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // TbToken
@@ -181,7 +184,7 @@ namespace EnvatoItemGetter
             this.LbError});
             this.statusStrip1.Location = new System.Drawing.Point(0, 448);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(800, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1130, 22);
             this.statusStrip1.TabIndex = 10;
             // 
             // LbError
@@ -189,11 +192,30 @@ namespace EnvatoItemGetter
             this.LbError.Name = "LbError";
             this.LbError.Size = new System.Drawing.Size(0, 17);
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.columncheck);
+            this.groupBox3.Location = new System.Drawing.Point(806, 12);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(312, 397);
+            this.groupBox3.TabIndex = 11;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Kolonlar";
+            // 
+            // columncheck
+            // 
+            this.columncheck.FormattingEnabled = true;
+            this.columncheck.Location = new System.Drawing.Point(17, 32);
+            this.columncheck.Name = "columncheck";
+            this.columncheck.Size = new System.Drawing.Size(289, 349);
+            this.columncheck.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 470);
+            this.ClientSize = new System.Drawing.Size(1130, 470);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.BuErrorListExport);
             this.Controls.Add(this.BuExport);
@@ -214,6 +236,7 @@ namespace EnvatoItemGetter
             this.groupBox2.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -237,6 +260,8 @@ namespace EnvatoItemGetter
         private System.Windows.Forms.SaveFileDialog EnvatoItemSaveDialog;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel LbError;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.CheckedListBox columncheck;
     }
 }
 
