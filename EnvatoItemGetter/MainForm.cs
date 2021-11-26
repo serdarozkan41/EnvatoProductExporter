@@ -45,12 +45,12 @@ namespace EnvatoItemGetter
             BuExport.Enabled = false;
             TbToken.Enabled = false;
 
-            columncheck.Items.Insert(0,"süm");
+            columncheck.Items.Insert(0, "EnvatoItemId");
             columncheck.Items.Insert(1, "süm2");
             columncheck.Items.Insert(2, "süm3");
             columncheck.Items.Insert(3, "süm4");
             columncheck.Items.Insert(4, "süm5");
-
+            //buradan ekledik.
 
         }
 
@@ -73,18 +73,24 @@ namespace EnvatoItemGetter
             DataTable dt = new DataTable();
             dt.Clear();
 
-
+            //secili olan listesinde seçili olanalrı ekle sadece kolon olarak
             foreach (var item in envatoItems)
             {
                 try
                 {
                     DataRow dr = dt.NewRow();
 
+                    
                     var envateItemProperties = GetProperties(item);
+
+                    //keyde başlık value değeri
+
+
                     for (int i = 0; i < envateItemProperties.Count; i++)
                     {
                         if (!dt.Columns.Contains(envateItemProperties[i].Key))
                         {
+                            //if mi ne olursa 
                             dt.Columns.Add(envateItemProperties[i].Key);
                         }
 
@@ -469,6 +475,5 @@ namespace EnvatoItemGetter
             }
             return keyValues;
         }
-
     }
 }

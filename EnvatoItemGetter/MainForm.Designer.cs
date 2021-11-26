@@ -197,7 +197,7 @@ namespace EnvatoItemGetter
             this.groupBox3.Controls.Add(this.columncheck);
             this.groupBox3.Location = new System.Drawing.Point(806, 12);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(312, 397);
+            this.groupBox3.Size = new System.Drawing.Size(312, 426);
             this.groupBox3.TabIndex = 11;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Kolonlar";
@@ -205,9 +205,9 @@ namespace EnvatoItemGetter
             // columncheck
             // 
             this.columncheck.FormattingEnabled = true;
-            this.columncheck.Location = new System.Drawing.Point(17, 32);
+            this.columncheck.Location = new System.Drawing.Point(17, 17);
             this.columncheck.Name = "columncheck";
-            this.columncheck.Size = new System.Drawing.Size(289, 349);
+            this.columncheck.Size = new System.Drawing.Size(289, 394);
             this.columncheck.TabIndex = 0;
             // 
             // MainForm
