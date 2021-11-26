@@ -46,10 +46,32 @@ namespace EnvatoItemGetter
             TbToken.Enabled = false;
 
             columncheck.Items.Insert(0, "EnvatoItemId");
-            columncheck.Items.Insert(1, "süm2");
-            columncheck.Items.Insert(2, "süm3");
-            columncheck.Items.Insert(3, "süm4");
-            columncheck.Items.Insert(4, "süm5");
+            columncheck.Items.Insert(1, "EnvatoItemName");
+            columncheck.Items.Insert(2, "EnvatoItemNumberOfSales");
+            columncheck.Items.Insert(3, "EnvatoItemAuthorUsername");
+            columncheck.Items.Insert(4, "EnvatoItemAuthorUrl");
+            columncheck.Items.Insert(4, "EnvatoItemUrl");
+            columncheck.Items.Insert(4, "EnvatoItemUpdatedAt");
+            columncheck.Items.Insert(4, "EnvatoItemDescription");
+            columncheck.Items.Insert(4, "EnvatoItemSite");
+            columncheck.Items.Insert(4, "EnvatoItemClassification");
+            columncheck.Items.Insert(4, "EnvatoItemClassificationUrl");
+            columncheck.Items.Insert(4, "EnvatoItemPriceCents");
+            columncheck.Items.Insert(4, "EnvatoItemAuthorImage");
+            columncheck.Items.Insert(4, "EnvatoItemSummary");
+            columncheck.Items.Insert(4, "EnvatoItemRating");
+            columncheck.Items.Insert(4, "EnvatoItemRatingCount");
+            columncheck.Items.Insert(4, "EnvatoItemPublishedAt");
+            columncheck.Items.Insert(4, "EnvatoItemTrending");
+            columncheck.Items.Insert(4, "EnvatoItemTags");
+            columncheck.Items.Insert(4, "Attributealphachannel");
+            columncheck.Items.Insert(4, "Attributefilesize");
+            columncheck.Items.Insert(4, "Attributefixedpreviewresolution");
+            columncheck.Items.Insert(4, "Attributelengthvideo");
+            columncheck.Items.Insert(4, "Attributeloopedvideo");
+            columncheck.Items.Insert(4, "Attributeresolution");
+            columncheck.Items.Insert(4, "Attributevideoencoding");
+            columncheck.Items.Insert(4, "IconPreviewIconUrl");
             //buradan ekledik.
 
         }
@@ -72,8 +94,17 @@ namespace EnvatoItemGetter
         {
             DataTable dt = new DataTable();
             dt.Clear();
+            List<string> selectedCheck = new List<string>();
 
             //secili olan listesinde seçili olanalrı ekle sadece kolon olarak
+            
+
+            for (int i = 0; i < columncheck.CheckedItems.Count; i++)
+            {
+                selectedCheck.Add(columncheck.CheckedItems[i].ToString()); 
+                
+            }
+
             foreach (var item in envatoItems)
             {
                 try
@@ -90,8 +121,11 @@ namespace EnvatoItemGetter
                     {
                         if (!dt.Columns.Contains(envateItemProperties[i].Key))
                         {
+                            if (selectedCheck.Any(s=>s==envateItemProperties[i].Key))
+                            {
+                                dt.Columns.Add(envateItemProperties[i].Key);
+                            }
                             //if mi ne olursa 
-                            dt.Columns.Add(envateItemProperties[i].Key);
                         }
 
                         var column = dt.Columns[envateItemProperties[i].Key];
